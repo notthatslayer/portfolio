@@ -483,13 +483,13 @@
             </div>
           </div>
           <div class="lg:col-span-7">
-            <form id="contactForm" class="grid gap-4 glass rounded-[1.5rem] p-5 border border-white/8">
+            <form id="contactForm" action="https://formsubmit.co/myth5901@gmail.com" method="POST" class="grid gap-4 glass rounded-[1.5rem] p-5 border border-white/8">
               <div class="grid md:grid-cols-2 gap-4">
-                <input id="contactName" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Your name" />
-                <input id="contactEmail" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Your email" />
+                <input id="contactName" name="name" required class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Your name" />
+                <input id="contactEmail" name="email" type="email" required class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Your email" />
               </div>
-              <input id="contactSubject" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Subject" />
-              <textarea id="contactMessage" rows="5" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Tell me about your idea..."></textarea>
+              <input id="contactSubject" name="subject" required class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Subject" />
+              <textarea id="contactMessage" name="message" required rows="5" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Tell me about your idea..."></textarea><input type="hidden" name="_captcha" value="false"><input type="hidden" name="_subject" value="Portfolio Contact Form">
               <div class="flex items-center justify-between gap-4 flex-wrap">
                 <div class="text-sm text-emerald-50/60">Prefer email? myth5901@gmail.com</div>
                 <button type="submit" class="rounded-full bg-emerald-400 px-6 py-3 font-medium text-black hover:bg-emerald-300 transition">Send Message</button>
@@ -500,6 +500,10 @@
       </div>
     </section>
   </main>
+
+<button id="floatingBtn" class="floating-btn showing rounded-full bg-emerald-400 px-5 py-3 font-medium text-black hover:bg-emerald-300 transition shadow-lg shadow-emerald-500/20">
+Email
+</button>
 
 
   <script>
@@ -573,17 +577,25 @@ Calculator`;
       URL.revokeObjectURL(url);
     }
 
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = document.getElementById('contactName').value.trim();
-      const email = document.getElementById('contactEmail').value.trim();
-      const subject = document.getElementById('contactSubject').value.trim() || 'Portfolio Contact Form';
-      const message = document.getElementById('contactMessage').value.trim();
-      const body = `Name: ${name || 'Not provided'}%0D%0AEmail: ${email || 'Not provided'}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message || '')}`;
-      window.location.href = `mailto:myth5901@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
-    });
+    if (floatingBtn && contactSection) {
+      const showBtn = () => {
+        const rect = contactSection.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.85 && rect.bottom > 0) {
+          floatingBtn.classList.add('hidden-state');
+          floatingBtn.classList.remove('showing');
+        } else {
+          floatingBtn.classList.remove('hidden-state');
+          floatingBtn.classList.add('showing');
+        }
+      };
+      window.addEventListener('scroll', showBtn);
+      showBtn();
+      floatingBtn.addEventListener('click', () => window.location.href = 'mailto:myth5901@gmail.com');
+    }
 
-    floatingBtn.addEventListener('click', () => window.location.href = 'mailto:myth5901@gmail.com');
+    // removed mailto form handler for static form submission
+
+    ('click', () => window.location.href = 'mailto:myth5901@gmail.com');
   </script>
 </body>
 </html>
