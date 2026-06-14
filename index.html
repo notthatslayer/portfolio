@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tayyaba's Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            emeraldDeep: {
+              950: '#02140d',
+              900: '#041b12',
+              800: '#07261a',
+              700: '#0b3524',
+              600: '#0f4a32',
+              500: '#11b56b'
+            }
+          },
+          boxShadow: {
+            glow: '0 0 0 1px rgba(16,185,129,0.18), 0 20px 80px rgba(0,0,0,0.45), 0 0 40px rgba(16,185,129,0.12)'
+          },
+          keyframes: {
+            floaty: {
+              '0%,100%': { transform: 'translateY(0px) translateX(0px)' },
+              '50%': { transform: 'translateY(-12px) translateX(6px)' }
+            },
+            pulseGlow: {
+              '0%,100%': { opacity: '0.55', transform: 'scale(1)' },
+              '50%': { opacity: '0.9', transform: 'scale(1.08)' }
+            },
+            drift: {
+              '0%': { transform: 'translate3d(0,0,0)' },
+              '50%': { transform: 'translate3d(20px,-18px,0)' },
+              '100%': { transform: 'translate3d(0,0,0)' }
+            }
+          },
+          animation: {
+            floaty: 'floaty 7s ease-in-out infinite',
+            pulseGlow: 'pulseGlow 4s ease-in-out infinite',
+            drift: 'drift 12s ease-in-out infinite'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        radial-gradient(circle at 20% 10%, rgba(16,185,129,0.16), transparent 24%),
+        radial-gradient(circle at 80% 20%, rgba(16,185,129,0.10), transparent 20%),
+        radial-gradient(circle at 50% 80%, rgba(16,185,129,0.08), transparent 22%),
+        linear-gradient(180deg, #020807 0%, #04110c 45%, #020807 100%);
+      color: #e8fff4;
+      overflow-x: hidden;
+    }
+    .glass {
+      background: rgba(6, 17, 12, 0.62);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(18px);
+    }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(34,197,94,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,0.05) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at center, black 38%, transparent 85%);
+    }
+    .reveal { opacity: 0; transform: translateY(24px); transition: all .8s cubic-bezier(.2,.8,.2,1); }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+    .line-glow {
+      box-shadow: 0 0 12px rgba(16,185,129,0.5), 0 0 32px rgba(16,185,129,0.15);
+    }
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0; bottom: -6px;
+      width: 0; height: 1px;
+      background: rgba(52, 211, 153, 0.95);
+      transition: width .25s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+    .project-card:hover, .skill-card:hover, .fact-card:hover, .timeline-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(16,185,129,0.35);
+      box-shadow: 0 0 0 1px rgba(16,185,129,0.14), 0 24px 80px rgba(0,0,0,0.48), 0 0 35px rgba(16,185,129,0.10);
+    }
+    .floating-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      transform: translateY(0);
+      transition: all .3s ease;
+    }
+    .floating-btn.showing { opacity: 1; pointer-events: auto; }
+    .floating-btn.hidden-state { opacity: 0; pointer-events: none; transform: translateY(18px); }
+  </style>
+</head>
+<body class="font-sans selection:bg-emerald-400/30 selection:text-white">
+  <div class="fixed inset-0 pointer-events-none grid-bg opacity-30"></div>
+
+  <header class="sticky top-0 z-40 border-b border-white/8 bg-black/25 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-5 md:px-8">
+      <div class="flex items-center justify-between py-4">
+        <button onclick="scrollToSection('home')" class="text-left">
+          <div class="text-lg md:text-xl font-semibold tracking-tight">Tayyaba Shaikh</div>
+          <div class="text-xs text-emerald-200/70">Frontend Developer • Content Writer • BSc IT</div>
+        </button>
+        <nav class="hidden md:flex items-center gap-7 text-sm text-emerald-50/80">
+          <button class="nav-link" onclick="scrollToSection('projects')">Projects</button>
+          <button class="nav-link" onclick="scrollToSection('skills')">Skills</button>
+          <button class="nav-link" onclick="scrollToSection('journey')">Journey</button>
+          <button class="nav-link" onclick="scrollToSection('facts')">Facts</button>
+          <button class="nav-link" onclick="scrollToSection('links')">Links</button>
+          <button class="nav-link" onclick="scrollToSection('contact')">Contact</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="relative overflow-hidden">
+      <div class="absolute inset-0">
+        <div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-400/20 blur-3xl animate-drift"></div>
+        <div class="absolute top-24 right-0 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl animate-floaty"></div>
+        <div class="absolute bottom-0 left-1/2 h-72 w-72 rounded-full bg-emerald-300/10 blur-3xl animate-pulseGlow"></div>
+      </div>
+      <div class="max-w-7xl mx-auto px-5 md:px-8 pt-20 md:pt-28 pb-16 md:pb-24 relative">
+        <div class="grid lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-7 reveal">
+            <div class="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-100/90 mb-6">
+              <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse"></span>
+              Mumbai, India
+            </div>
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-tight md:leading-tight">
+              Hello, World! I'm Tayyaba
+              <span class="block mt-3 text-xl md:text-2xl lg:text-3xl font-medium text-emerald-100/90">
+                I build, break and fix stuff, and write things people actually want to read! :)
+              </span>
+            </h1>
+            <div class="mt-8 flex flex-col sm:flex-row gap-4">
+              <button type="button" onclick="window.location.href='mailto:myth5901@gmail.com';" class="rounded-full bg-emerald-400 px-6 py-3 font-medium text-black hover:bg-emerald-300 transition shadow-lg shadow-emerald-500/20">
+                Email Me
+              </button>
+            </div>
+            <div class="mt-8 flex flex-wrap gap-3 text-sm text-emerald-50/70">
+              <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2">Frontend Developer</span>
+              <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2">Content Writer</span>
+              <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2">SaaS-style UI Builder</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 reveal">
+            <div class="glass relative rounded-[2rem] p-5 md:p-6 shadow-glow overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/12 via-transparent to-transparent"></div>
+              <div class="relative rounded-[1.5rem] border border-white/8 bg-black/35 p-4 md:p-5">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <div class="text-xs uppercase tracking-[0.3em] text-emerald-200/70">About</div>
+                    <div class="text-2xl font-semibold mt-1">Emerald Builder</div>
+                  </div>
+                  <div class="h-12 w-12 rounded-2xl bg-emerald-400/15 border border-emerald-400/20 grid place-items-center">
+                    <div class="h-5 w-5 rounded-full bg-emerald-300 animate-pulse"></div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="rounded-2xl bg-white/5 border border-white/8 p-4">
+                    <div class="text-xs text-emerald-100/60">Focus</div>
+                    <div class="mt-1 font-medium">Frontend + Content</div>
+                  </div>
+                  <div class="rounded-2xl bg-white/5 border border-white/8 p-4">
+                    <div class="text-xs text-emerald-100/60">City</div>
+                    <div class="mt-1 font-medium">Mumbai</div>
+                  </div>
+                  <div class="rounded-2xl bg-white/5 border border-white/8 p-4 col-span-2">
+                    <div class="text-xs text-emerald-100/60">Signature</div>
+                    <div class="mt-1 font-medium">Premium interfaces with strong storytelling</div>
+                  </div>
+                </div>
+                <div class="mt-5 h-56 rounded-[1.25rem] border border-emerald-400/15 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.22),transparent_52%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] flex items-end justify-between p-4 overflow-hidden">
+                  <div class="space-y-2">
+                    <div class="text-xs uppercase tracking-[0.28em] text-emerald-100/60">Mini OS</div>
+                    <div class="text-xl font-semibold">Browser-based operating system</div>
+                    <div class="text-sm text-emerald-50/70 max-w-xs">A showcase of product design, interaction polish, and front-end engineering.</div>
+                  </div>
+                  <div class="w-28 h-28 rounded-3xl bg-black/30 border border-white/10 backdrop-blur-md grid place-items-center animate-floaty">
+                    <div class="text-emerald-300 text-3xl">◉</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <div class="reveal flex items-end justify-between gap-4 mb-10">
+        <div>
+          <div class="text-sm uppercase tracking-[0.3em] text-emerald-200/60">Projects</div>
+          <h2 class="mt-2 text-3xl md:text-5xl font-semibold tracking-tight">Projects :D</h2>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div class="project-card reveal glass rounded-[2rem] p-5 transition duration-300">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-semibold">Mini OS</h3>
+              <p class="mt-2 text-emerald-50/70 leading-7">A browser-based operating system concept with polished desktop interactions.</p>
+            </div>
+            <div class="h-12 w-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 grid place-items-center text-emerald-300">◉</div>
+          </div>
+          <div class="mt-5 flex gap-3">
+            <button onclick="window.location.href='https://notthatslayer.github.io/Mini-OS/';" class="rounded-full bg-emerald-400 px-5 py-3 font-medium text-black hover:bg-emerald-300 transition">Live Link</button>
+          </div>
+        </div>
+
+        <div class="project-card reveal glass rounded-[2rem] p-5 transition duration-300">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-semibold">SpotDemo</h3>
+              <p class="mt-2 text-emerald-50/70 leading-7">A music player concept with a clean interface and premium visual rhythm.</p>
+            </div>
+            <div class="h-12 w-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 grid place-items-center text-emerald-300">♫</div>
+          </div>
+          <div class="mt-5 flex gap-3">
+            <button onclick="window.location.href='https://notthatslayer.github.io/spotdemo/';" class="rounded-full bg-emerald-400 px-5 py-3 font-medium text-black hover:bg-emerald-300 transition">Live Link</button>
+          </div>
+        </div>
+
+        <div class="project-card reveal glass rounded-[2rem] p-5 transition duration-300">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-semibold">Venting Platform</h3>
+              <p class="mt-2 text-emerald-50/70 leading-7">An anonymous sharing space focused on emotional safety and clean UX.</p>
+            </div>
+            <div class="h-12 w-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 grid place-items-center text-emerald-300">◌</div>
+          </div>
+          <div class="mt-5 flex gap-3">
+            <button onclick="window.location.href='https://notthatslayer.github.io/Venting-Platform/';" class="rounded-full bg-emerald-400 px-5 py-3 font-medium text-black hover:bg-emerald-300 transition">Live Link</button>
+          </div>
+        </div>
+
+        <div class="project-card reveal glass rounded-[2rem] p-5 transition duration-300">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-semibold">Budget Tracker</h3>
+              <p class="mt-2 text-emerald-50/70 leading-7">A simple personal finance tracker designed for clarity and everyday usefulness.</p>
+            </div>
+            <div class="h-12 w-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 grid place-items-center text-emerald-300">₹</div>
+          </div>
+          <div class="mt-5 flex gap-3">
+            <button onclick="window.location.href='https://notthatslayer.github.io/Budget-Tracker/';" class="rounded-full bg-emerald-400 px-5 py-3 font-medium text-black hover:bg-emerald-300 transition">Live Link</button>
+          </div>
+        </div>
+
+        <div class="project-card reveal glass rounded-[2rem] p-5 transition duration-300 md:col-span-2 xl:col-span-1">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-semibold">Calculator</h3>
+              <p class="mt-2 text-emerald-50/70 leading-7">A practical utility project with a clean interface and quick interactions.</p>
+            </div>
+            <div class="h-12 w-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 grid place-items-center text-emerald-300">⌁</div>
+          </div>
+          <div class="mt-5 flex gap-3">
+            <button onclick="window.location.href='https://notthatslayer.github.io/Calculator/';" class="rounded-full bg-emerald-400 px-5 py-3 font-medium text-black hover:bg-emerald-300 transition">Live Link</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <div class="reveal mb-10">
+        <div class="text-sm uppercase tracking-[0.3em] text-emerald-200/60">Skills</div>
+        <h2 class="mt-2 text-3xl md:text-5xl font-semibold tracking-tight">A clean mix of technical, creative, and build-focused skills.</h2>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-5">
+        <div class="skill-card reveal glass rounded-[2rem] p-5 md:p-6 transition duration-300">
+          <h3 class="text-xl font-semibold mb-4">Technical Skills</h3>
+          <div class="space-y-4 text-emerald-50/85">
+            <div class="flex items-center justify-between"><span>HTML</span><span class="text-emerald-300">Advanced</span></div>
+            <div class="flex items-center justify-between"><span>CSS</span><span class="text-emerald-300">Advanced</span></div>
+            <div class="flex items-center justify-between"><span>JavaScript</span><span class="text-emerald-300">Strong</span></div>
+            <div class="flex items-center justify-between"><span>Python</span><span class="text-emerald-300">Intermediate</span></div>
+            <div class="flex items-center justify-between"><span>MySQL</span><span class="text-emerald-300">Intermediate</span></div>
+          </div>
+        </div>
+
+        <div class="skill-card reveal glass rounded-[2rem] p-5 md:p-6 transition duration-300">
+          <h3 class="text-xl font-semibold mb-4">Creative Skills</h3>
+          <div class="space-y-4 text-emerald-50/85">
+            <div class="flex items-center justify-between"><span>Content Writing</span><span class="text-emerald-300">Strong</span></div>
+            <div class="flex items-center justify-between"><span>SEO</span><span class="text-emerald-300">Good</span></div>
+            <div class="flex items-center justify-between"><span>Blogging</span><span class="text-emerald-300">Strong</span></div>
+            <div class="flex items-center justify-between"><span>Copywriting</span><span class="text-emerald-300">Good</span></div>
+          </div>
+        </div>
+
+        <div class="skill-card reveal glass rounded-[2rem] p-5 md:p-6 transition duration-300">
+          <h3 class="text-xl font-semibold mb-4">Build Style</h3>
+          <div class="space-y-4 text-emerald-50/85">
+            <div class="flex items-center justify-between"><span>Modern UI</span><span class="text-emerald-300">Yes</span></div>
+            <div class="flex items-center justify-between"><span>Responsive Design</span><span class="text-emerald-300">Yes</span></div>
+            <div class="flex items-center justify-between"><span>Interactive Web Apps</span><span class="text-emerald-300">Yes</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<section id="journey" class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+  <div class="reveal mb-10">
+    <div class="text-sm uppercase tracking-[0.3em] text-emerald-200/60">Journey</div>
+    <h2 class="mt-2 text-3xl md:text-5xl font-semibold tracking-tight">
+      Simple, chronological, and focused on the work.
+    </h2>
+  </div>
+
+  <div class="relative">
+
+    <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-300/20 via-emerald-300/70 to-emerald-300/20"></div>
+
+    <div class="space-y-12">
+
+      <div class="timeline-card reveal md:w-1/2 md:pr-8 ml-10 md:ml-0">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Oct 2025 – Dec 2025</div>
+          <div class="text-xl font-semibold mt-1">Inamigos Foundation Content Writing</div>
+          <p class="mt-2 text-emerald-50/70">
+            Crafted content with clarity, consistency, and audience-first messaging.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:ml-auto md:pl-8 ml-10">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Dec 2025 – Jan 2026</div>
+          <div class="text-xl font-semibold mt-1">Marpu Foundation Content Writing</div>
+          <p class="mt-2 text-emerald-50/70">
+            Expanded storytelling style and polished content for impact-driven communication.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:pr-8 ml-10 md:ml-0">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Jan 2026 – Apr 2026</div>
+          <div class="text-xl font-semibold mt-1">Progoez Content Writing</div>
+          <p class="mt-2 text-emerald-50/70">
+            Worked on content that blended brand voice, readability, and structure.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:ml-auto md:pl-8 ml-10">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Mini OS</div>
+          <div class="text-xl font-semibold mt-1">Browser-based OS experiment</div>
+          <p class="mt-2 text-emerald-50/70">
+            A playful but polished desktop-style build.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:pr-8 ml-10 md:ml-0">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">SpotDemo</div>
+          <div class="text-xl font-semibold mt-1">Music player concept</div>
+          <p class="mt-2 text-emerald-50/70">
+            Focused on interface rhythm and clean interactions.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:ml-auto md:pl-8 ml-10">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Venting Platform</div>
+          <div class="text-xl font-semibold mt-1">Anonymous sharing space</div>
+          <p class="mt-2 text-emerald-50/70">
+            Designed for simplicity and emotional safety.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:pr-8 ml-10 md:ml-0">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Budget Tracker</div>
+          <div class="text-xl font-semibold mt-1">Personal finance app</div>
+          <p class="mt-2 text-emerald-50/70">
+            Made to be practical, quick, and easy to use.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:ml-auto md:pl-8 ml-10">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Calculator</div>
+          <div class="text-xl font-semibold mt-1">Utility build</div>
+          <p class="mt-2 text-emerald-50/70">
+            A small but useful project with a clean UI.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-card reveal md:w-1/2 md:pr-8 ml-10 md:ml-0">
+        <div class="glass rounded-[1.5rem] p-5 border border-white/8">
+          <div class="text-emerald-300 text-sm">Experiments</div>
+          <div class="text-xl font-semibold mt-1">MakeCode, block coding, Adafruit</div>
+          <p class="mt-2 text-emerald-50/70">
+            Ongoing experimentation across fun interactive builds.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <section id="facts" class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <div class="reveal mb-10">
+        <div class="text-sm uppercase tracking-[0.3em] text-emerald-200/60">Fun Facts</div>
+        <h2 class="mt-2 text-3xl md:text-5xl font-semibold tracking-tight">A minimal list of experiments and builds.</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="fact-card reveal glass rounded-[1.5rem] p-5 transition duration-300">🖳 <div class="mt-3 text-xl font-semibold">Mini OS</div></div>
+        <div class="fact-card reveal glass rounded-[1.5rem] p-5 transition duration-300">♫ <div class="mt-3 text-xl font-semibold">SpotDemo</div></div>
+        <div class="fact-card reveal glass rounded-[1.5rem] p-5 transition duration-300">◡̈ <div class="mt-3 text-xl font-semibold">Venting Platform</div></div>
+        <div class="fact-card reveal glass rounded-[1.5rem] p-5 transition duration-300">⛃⛂ <div class="mt-3 text-xl font-semibold">Budget Tracker</div></div>
+        <div class="fact-card reveal glass rounded-[1.5rem] p-5 transition duration-300">🖩 <div class="mt-3 text-xl font-semibold">Calculator</div></div>
+        <div class="fact-card reveal glass rounded-[1.5rem] p-5 transition duration-300">⚝ <div class="mt-3 text-xl font-semibold">MakeCode, block coding, Adafruit</div></div>
+      </div>
+    </section>
+
+    <section id="links" class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <div class="reveal mb-10">
+        <div class="text-sm uppercase tracking-[0.3em] text-emerald-200/60">Portfolio / Links</div>
+        <h2 class="mt-2 text-3xl md:text-5xl font-semibold tracking-tight">Working links to my profiles and work.</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="reveal glass rounded-[2rem] p-6 border border-white/8">
+          <div class="text-emerald-300 text-sm uppercase tracking-[0.25em]">GitHub</div>
+          <div class="mt-3 text-2xl font-semibold">Source code and experiments</div><br>
+          <button onclick="openProject('https://github.com/notthatslayer')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10 transition">GitHub</button>
+        </div>
+        <div class="reveal glass rounded-[2rem] p-6 border border-white/8">
+          <div class="text-emerald-300 text-sm uppercase tracking-[0.25em]">Dev.to</div>
+          <div class="mt-3 text-2xl font-semibold">Writing and blog posts</div><br>
+          <button onclick="openProject('https://dev.to/deffslayer')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10 transition">Open Dev.to</button>
+        </div>
+        <div class="reveal glass rounded-[2rem] p-6 border border-white/8">
+          <div class="text-emerald-300 text-sm uppercase tracking-[0.25em]">LinkedIn</div>
+          <div class="mt-3 text-2xl font-semibold">Professional profile</div><br>
+          <button onclick="openProject('https://www.linkedin.com/in/tayyaba590')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10 transition">LinkedIn</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="max-w-7xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <div class="reveal glass rounded-[2.25rem] p-6 md:p-10 border border-emerald-400/15 shadow-glow relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.18),transparent_45%)]"></div>
+        <div class="relative grid lg:grid-cols-12 gap-8 items-start">
+          <div class="lg:col-span-5">
+            <div class="text-sm uppercase tracking-[0.3em] text-emerald-200/60">Contact</div>
+            <h2 class="mt-2 text-3xl md:text-5xl font-semibold tracking-tight">Let’s build something cool.</h2>
+            <p class="mt-4 text-emerald-50/70 leading-7">Open to frontend, content, and product-focused collaborations.</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <button onclick="window.location.href='mailto:myth5901@gmail.com'" class="rounded-full bg-emerald-400 px-6 py-3 font-medium text-black hover:bg-emerald-300 transition">Email Me</button>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-emerald-50/75">
+              <button onclick="openProject('mailto:myth5901@gmail.com')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10 transition">Email</button>
+              <button onclick="openProject('https://www.linkedin.com/in/tayyaba590')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10 transition">LinkedIn</button>
+              <button onclick="openProject('https://github.com/notthatslayer')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10 transition">GitHub</button>
+              <button onclick="openProject('https://dev.to/deffslayer')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10 transition">Dev.to</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7">
+            <form id="contactForm" class="grid gap-4 glass rounded-[1.5rem] p-5 border border-white/8">
+              <div class="grid md:grid-cols-2 gap-4">
+                <input id="contactName" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Your name" />
+                <input id="contactEmail" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Your email" />
+              </div>
+              <input id="contactSubject" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Subject" />
+              <textarea id="contactMessage" rows="5" class="rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-emerald-400/40" placeholder="Tell me about your idea..."></textarea>
+              <div class="flex items-center justify-between gap-4 flex-wrap">
+                <div class="text-sm text-emerald-50/60">Prefer email? myth5901@gmail.com</div>
+                <button type="submit" class="rounded-full bg-emerald-400 px-6 py-3 font-medium text-black hover:bg-emerald-300 transition">Send Message</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <script>
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => io.observe(el));
+
+    const floatingBtn = document.getElementById('floatingBtn');
+    const contactSection = document.getElementById('contact');
+    const showBtn = () => {
+      const rect = contactSection.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.85 && rect.bottom > 0) {
+        floatingBtn.classList.add('hidden-state');
+        floatingBtn.classList.remove('showing');
+      } else {
+        floatingBtn.classList.remove('hidden-state');
+        floatingBtn.classList.add('showing');
+      }
+    };
+    window.addEventListener('scroll', showBtn);
+    showBtn();
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openProject(url) {
+      if (url && url !== '') {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    }
+
+    function downloadResume() {
+      const content = `Tayyaba Shaikh
+BSc IT Student | Frontend Developer | Content Writer
+Location: Mumbai, India
+Email: myth5901@gmail.com
+LinkedIn: https://www.linkedin.com/in/tayyaba590
+GitHub: https://github.com/notthatslayer
+Dev.to: https://dev.to/deffslayer
+
+Summary:
+Frontend developer and content writer focused on premium UI, product thinking, and high-quality storytelling.
+
+Technical Skills:
+HTML, CSS, JavaScript, Python, MySQL
+
+Creative Skills:
+Content Writing, SEO, Blogging, Copywriting
+
+Build Style:
+Modern UI, responsive design, interactive web apps
+
+Projects:
+Mini OS
+SpotDemo
+Venting Platform
+Budget Tracker
+Calculator`;
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const subject = document.getElementById('contactSubject').value.trim() || 'Portfolio Contact Form';
+      const message = document.getElementById('contactMessage').value.trim();
+      const body = `Name: ${name || 'Not provided'}%0D%0AEmail: ${email || 'Not provided'}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message || '')}`;
+      window.location.href = `mailto:myth5901@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+    });
+
+    floatingBtn.addEventListener('click', () => window.location.href = 'mailto:myth5901@gmail.com');
+  </script>
+</body>
+</html>
